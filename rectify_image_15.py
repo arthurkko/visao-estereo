@@ -1,6 +1,7 @@
 import cv2 as cv 
 import numpy as np
 import matplotlib as plt
+import time
 
 cameraMatrix1 = np.array([[828.1032, 0.8006, 676.2680],
                           [0, 828.9722, 373.6433],
@@ -32,9 +33,11 @@ path1 = '/home/smir/Desktop/Visao Estereo/imagem/Direita/frame13.jpg'
 path2 = '/home/smir/Desktop/Visao Estereo/imagem/Esquerda/frame13.jpg'
 img1 = cv.imread(path1)
 img2 = cv.imread(path2)
+t1 = time.time()
 img_rect1 = cv.remap(img1, mapx1, mapy1, cv.INTER_LINEAR)
+t2 = time.time()
 img_rect2 = cv.remap(img2, mapx2, mapy2, cv.INTER_LINEAR)
-
+print("delta: ", t2-t1)
 img_rect1 = img_rect1[roi1[1]:roi2[3]+73, roi2[0]+10:roi2[2]+57, :]
 img_rect2 = img_rect2[roi1[1]:roi2[3]+73, roi2[0]+10:roi2[2]+57, :]
 
