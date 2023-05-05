@@ -5,8 +5,8 @@ from exposure_calibration_scaleabs import basicLinearTransform, gammaCorrection
 from datetime import datetime
 from beeprint import pp
 
-gravar = 0
-foto = 1
+gravar = 1
+foto = 0
 
 t1 = time.time()
 t2 = time.time()
@@ -59,8 +59,8 @@ while True:
         out_d.write(frame_d)
 
     # Display the resulting frame
-    cv.imshow('Camera Esquerda', trans1)
-    cv.imshow('Camera Direita', trans3)
+    cv.imshow('Camera Esquerda', frame_e)
+    cv.imshow('Camera Direita', frame_d)
     
     t2 = time.time()
     if (t2-t1>=3) and foto:
