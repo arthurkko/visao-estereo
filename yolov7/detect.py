@@ -20,7 +20,7 @@ from utils.torch_utils import select_device, load_classifier, time_synchronized,
 
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
-    save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
+    save_img = not opt.nosave #and not source.endswith('.txt')  # save inference images
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
 
@@ -51,7 +51,7 @@ def detect(save_img=False):
         modelc.load_state_dict(torch.load('weights/resnet101.pt', map_location=device)['model']).to(device).eval()
 
     # Set Dataloader
-    vid_path, vid_writer = None, None
+    vid_path, vid_writer = None, {}
     if webcam:
         view_img = check_imshow()
         cudnn.benchmark = True  # set True to speed up constant image size inference
@@ -70,10 +70,10 @@ def detect(save_img=False):
     old_img_b = 1
 
     t0 = time.time()
-    t1 = time.time()
+    frames_per_sec = time.time()
     for path, img, im0s, vid_cap in dataset:
-        print('fps: ', 1/(time.time() - t1))
-        t1 = time.time()
+        print('fps: ', 1/(time.time() - frames_per_sec))
+        frames_per_sec = time.time()
 
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
@@ -141,8 +141,7 @@ def detect(save_img=False):
             # Stream results
             if view_img:
                 cv2.imshow(str(p), im0)
-                if cv2.waitKey(1)==ord('q'):  # 1 millisecond
-                    break
+                cv2.waitKey(1)  # 1 millisecond
 
             # Save results (image with detections)
             if save_img:
@@ -150,26 +149,25 @@ def detect(save_img=False):
                     cv2.imwrite(save_path, im0)
                     print(f" The image with the result is saved in: {save_path}")
                 else:  # 'video' or 'stream'
-                    if vid_path != save_path:  # new video
-                        vid_path = save_path
-                        if isinstance(vid_writer, cv2.VideoWriter):
-                            vid_writer.release()  # release previous video writer
+                    if save_path not in vid_writer:  # new video
+                        # if isinstance(vid_writer, cv2.VideoWriter):
+                        #     vid_writer.release()  # release previous video writer
                         if False: #if vid_cap:  # video
                             fps = vid_cap.get(cv2.CAP_PROP_FPS)
                             w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
                             h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
                         else:  # stream
-                            fps, w, h = 30, im0.shape[1], im0.shape[0]
-                            print(w, h)
-                            save_path += '.avi'
-                        vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'MJPG'), fps, (w, h))
-                    vid_writer.write(im0)
+                            fps, w, h = 24, im0.shape[1], im0.shape[0]
+                        vid_writer[save_path] = cv2.VideoWriter(save_path+'.avi', cv2.VideoWriter_fourcc(*'MJPG'), fps, (w, h))
+                    vid_writer[save_path].write(im0)
 
     if save_txt or save_img:
         s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
         print(f"Results saved to {save_dir}{s}")
 
     print(f'Done. ({time.time() - t0:.3f}s)')
+    for k in vid_writer:
+        vid_writer[k].release()
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':

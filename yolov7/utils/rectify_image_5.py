@@ -49,19 +49,18 @@ path2 = '/home/smir/Desktop/imagens/Esquerda/frame16.jpg'
 # img1 = cv.imread(path1)
 # img2 = cv.imread(path2)
 
-def rectify_frame(img1):#, img2):
+def rectify_frame(img, index):
     try:
-        img_rect1 = cv.remap(img1, mapx1, mapy1, cv.INTER_LINEAR)
-        # img_rect2 = cv.remap(img2, mapx2, mapy2, cv.INTER_LINEAR)
+        if index==0:
+            img_rect = cv.remap(img, mapx1, mapy1, cv.INTER_LINEAR)
+        else:
+            img_rect = cv.remap(img, mapx2, mapy2, cv.INTER_LINEAR)
 
         rect = (roi2[0], roi1[1], roi1[2]+55, roi1[3]+88)
-        img_rect1 = img_rect1[rect[1]:rect[3], rect[0]:rect[2], :]
-
-        #print(img_rect1.shape)
-        # img_rect2 = img_rect2[rect[1]:rect[3], rect[0]:rect[2], :]
+        img_rect = img_rect[rect[1]:rect[3], rect[0]:rect[2], :]
 
     except:
-        img_rect1 = np.zeros((498, 1115, 3))
+        img_rect = np.zeros((498, 1115, 3))
 
     # draw the images side by side
     # total_size = (max(img_rect1.shape[0], img_rect2.shape[0]),
@@ -80,7 +79,8 @@ def rectify_frame(img1):#, img2):
     # cv.imshow('img', img)
     
     # cv.imshow('img2', img_rect2)
-    return img_rect1
+    return img_rect
+
 
 if __name__ == "__main__":
 

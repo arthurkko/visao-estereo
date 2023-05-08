@@ -302,7 +302,7 @@ class LoadStreams:  # multiple IP or RTSP cameras
             h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             self.fps = cap.get(cv2.CAP_PROP_FPS) % 100
             _, orin = cap.read()  # guarantee first frame
-            mod = rectify_frame(orin)
+            mod = rectify_frame(orin, i)
             self.imgs[i] = mod
             thread = Thread(target=self.update, args=([i, cap]), daemon=True)
             print(f' success ({w}x{h} at {self.fps:.2f} FPS).')
@@ -324,7 +324,7 @@ class LoadStreams:  # multiple IP or RTSP cameras
             cap.grab()
             if n == 4:  # read every 4th frame
                 success, im = cap.retrieve()
-                mod = rectify_frame(im)
+                mod = mod = rectify_frame(im, index)
                 self.imgs[index] = mod if success else self.imgs[index] * 0
                 n = 0
             time.sleep(1 / self.fps)  # wait time
