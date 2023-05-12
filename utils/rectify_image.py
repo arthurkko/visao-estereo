@@ -44,10 +44,17 @@ mapx2, mapy2 = cv.initUndistortRectifyMap(cameraMatrix2, distCoeffs2, R2, P2,
                                           imageSize,
                                           cv.CV_32FC2)
 
-path1 = '/home/smir/Desktop/imagens/Direita/frame16.jpg'
-path2 = '/home/smir/Desktop/imagens/Esquerda/frame16.jpg'
-# img1 = cv.imread(path1)
-# img2 = cv.imread(path2)
+class CameraParams():
+    def __init__(self, esq=cameraMatrix1, dir=cameraMatrix2) -> None:
+        self.fxe = esq[0][0]
+        self.fye = esq[1][1]
+        self.u0e = esq[0][2]
+        self.v0e = esq[1][2]
+
+        self.fxd = dir[0][0]
+        self.fyd = dir[1][1]
+        self.u0d = dir[0][2]
+        self.v0d = dir[1][2]
 
 def rectify_frame(img, index):
     try:
@@ -83,6 +90,8 @@ def rectify_frame(img, index):
 
 
 if __name__ == "__main__":
+    p = CameraParams()
+    print(p.fxe)
 
     cap = cv.VideoCapture("/home/smir/Desktop/Visao Estereo/video/Esquerda/video04_29_13_06.avi")
     while 1:
