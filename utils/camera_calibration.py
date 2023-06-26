@@ -91,3 +91,5 @@ print( "total error: {}".format(mean_error/len(objpoints)) )
 
 print('mtx: ', mtx)
 print('dist: ', dist)
+print('r: ', rvecs)
+print('t: ', tvecs)

@@ -1,9 +1,7 @@
 import numpy as np
 import cv2 as cv
 import time
-from exposure_calibration_scaleabs import basicLinearTransform, gammaCorrection
 from datetime import datetime
-from beeprint import pp
 
 gravar = 1
 foto = 0
@@ -13,14 +11,14 @@ t2 = time.time()
 currentTime = datetime.now().strftime("%m_%d_%H_%M")
 i = 1
 
-cap_e = cv.VideoCapture(2)
+cap_e = cv.VideoCapture(4)
 if not cap_e.isOpened():
     print("Cannot open camera")
     exit()
 cap_e.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
 cap_e.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 
-cap_d= cv.VideoCapture(4) 
+cap_d= cv.VideoCapture(0) 
 if not cap_d.isOpened():
     print("Cannot open camera")
     exit()
@@ -46,12 +44,6 @@ while True:
     if not ret_d:
         print("Can't receive frame (stream end?). Exiting ...")
         break
-    
-    trans1 = basicLinearTransform(frame_d)
-    # trans2 = gammaCorrection(trans1)
-
-    trans3 = basicLinearTransform(frame_e)
-    # trans4 = gammaCorrection(trans3)
     
     # write the flipped frame
     if gravar:
