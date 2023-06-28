@@ -13,16 +13,16 @@ model = YOLO('yolov8n.pt')
 
 # Open the video file
 
-# cap_e = cv.VideoCapture(4)
-cap_e = cv.VideoCapture('/home/smir/Desktop/Visao Estereo/video/Esquerda/video05_15_18_29.avi')
+cap_e = cv.VideoCapture(4)
+# cap_e = cv.VideoCapture('/home/smir/Desktop/Visao Estereo/video/Esquerda/video05_15_18_29.avi')
 if not cap_e.isOpened():
     print("Cannot open camera")
     exit()
 cap_e.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
 cap_e.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 
-# cap_d= cv.VideoCapture(2) 
-cap_d= cv.VideoCapture('/home/smir/Desktop/Visao Estereo/video/Direita/video05_15_18_29.avi') 
+cap_d= cv.VideoCapture(2) 
+# cap_d= cv.VideoCapture('/home/smir/Desktop/Visao Estereo/video/Direita/video05_15_18_29.avi') 
 if not cap_d.isOpened():
     print("Cannot open camera")
     exit()
@@ -85,11 +85,9 @@ while cap_e.isOpened():
         
         for p in pairs:
             dist = calculate_dist(res_e.xywh, res_d.xywh, p, params)
-            # disp = calculate_disp(res_e.xywh, res_d.xywh, p, params)
-            disp = int(res_e.xywh[p[0]][0] - res_d.xywh[p[1]][0])
+            disp = calculate_disp(res_e.xywh, res_d.xywh, p, params)
             
-            # cv.circle(annotated_frame_e,(int(res_e.xywh[p[0]][0]), int(res_e.xywh[p[0]][1])), 10, (0,0,255), 15)
-            # cv.circle(annotated_frame_d,(int(res_d.xywh[p[1]][0]), int(res_d.xywh[p[1]][1])), 10, (0,0,255), 15)
+            # write the x and y position of objects in pixel
             cv.putText(annotated_frame_e, f'px:{int(res_e.xywh[p[0]][0])}',
                        (int(res_e.xyxy[p[0]][2]-60), int(res_e.xyxy[p[0]][1]-25)),
                        cv.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
@@ -102,7 +100,12 @@ while cap_e.isOpened():
             cv.putText(annotated_frame_d, f'py:{int(res_d.xywh[p[1]][1])}',
                        (int(res_d.xyxy[p[1]][2]-60), int(res_d.xyxy[p[1]][1]-10)),
                        cv.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+            # put_px(image, right/left, xywh, xyxy, match)
+            # put_py(image, right/left, xywh, xyxy, match)
+            # put_px(image, right/left, xywh, xyxy, match)
+            # put_py(image, right/left, xywh, xyxy, match)
             
+            # write the xyz position of object from the right camera
             cv.putText(annotated_frame_e, f'x:{str(dist[0])}',
                        (int(res_e.xyxy[p[0]][0]+5), int(res_e.xyxy[p[0]][3]-35)),
                        cv.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
@@ -112,6 +115,11 @@ while cap_e.isOpened():
             cv.putText(annotated_frame_e, f'z:{str(dist[2])}',
                        (int(res_e.xyxy[p[0]][0]+5), int(res_e.xyxy[p[0]][3]-5)),
                        cv.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+            #put_x()
+            #put_y()
+            #put_z()
+
+            # write the disparity of objects between cameras
             cv.putText(annotated_frame_d, f'disp:{disp}',
                        (int(res_d.xyxy[p[1]][0]+5), int(res_d.xyxy[p[1]][3]-5)),
                        cv.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)

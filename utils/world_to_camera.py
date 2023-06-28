@@ -41,26 +41,31 @@ def calculate_dist(boxes1, boxes2, match, camera_params):
     # dist = np.zeros(3)
     # dist = np.trunc(np.dot(A1,b))
 
-    z = 815*(-camera_params.T[0])/((boxes1[match[0]][0]-boxes2[match[1]][0])*1.75)
-    x = -z*(552-boxes2[match[1]][0])/camera_params.fxd
-    y = z*(boxes2[match[1]][1]-250)/camera_params.fyd
+    FC = 1.42
+
+    z = 815*(-camera_params.T[0])/((boxes1[match[0]][0]-boxes2[match[1]][0])*FC)
+    x = -z*(552-boxes2[match[1]][0])*FC/camera_params.fxd
+    y = z*(boxes2[match[1]][1]-250)*FC/camera_params.fyd
     dist = np.array([int(x), int(y), int(z)])
 
     return dist
 
 def calculate_disp(boxes1, boxes2, match, camera_params):
     
-    re = (boxes1[match[0]][0]-552)**2+(boxes1[match[0]][1]-249)**2
-    xde = 552 + (boxes1[match[0]][0]-552)*(1+(camera_params.D1[0]/820**2)*re+(camera_params.D1[1]/820**4)*re**2)
+    # re = (boxes1[match[0]][0]-552)**2+(boxes1[match[0]][1]-249)**2
+    # xde = 552 + (boxes1[match[0]][0]-552)*(1+(camera_params.D1[0]/820**2)*re+(camera_params.D1[1]/820**4)*re**2)
 
-    rd = (boxes2[match[1]][0]-552)**2+(boxes2[match[1]][1]-249)**2
-    xdd = 552 + (boxes2[match[1]][0]-552)*(1+(camera_params.D2[0]/820**2)*rd+(camera_params.D2[1]/820**4)*rd**2)
+    # rd = (boxes2[match[1]][0]-552)**2+(boxes2[match[1]][1]-249)**2
+    # xdd = 552 + (boxes2[match[1]][0]-552)*(1+(camera_params.D2[0]/820**2)*rd+(camera_params.D2[1]/820**4)*rd**2)
 
-    disp = xde - xdd
-    if (boxes1[match[0]][0]>400) and (boxes1[match[0]][0]<420):
-        print((1+camera_params.D1[0]*re+camera_params.D1[1]*re**2))
-        print('xde: ', xde)
-        print('xdd: ', xdd)
-        print('disp: ', disp)
-        print('')
+    # disp = xde - xdd
+    # if (boxes1[match[0]][0]>400) and (boxes1[match[0]][0]<420):
+    #     print((1+camera_params.D1[0]*re+camera_params.D1[1]*re**2))
+    #     print('xde: ', xde)
+    #     print('xdd: ', xdd)
+    #     print('disp: ', disp)
+    #     print('')
+
+    disp = int(boxes1[match[0]][0] - boxes2[match[1]][0])
+
     return disp

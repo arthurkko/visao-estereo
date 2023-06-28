@@ -1,10 +1,16 @@
+"""
+Código para gravar e fotografar a saída das câmeras do sistema estéreo.
+
+Para ativar a função coloque 1 na variável, caso contrário, 0.
+"""
+
 import numpy as np
 import cv2 as cv
 import time
 from datetime import datetime
 
-gravar = 1
-foto = 0
+GRAVAR = 0
+FOTO = 0
 
 t1 = time.time()
 t2 = time.time()
@@ -26,7 +32,7 @@ cap_d.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
 cap_d.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 
 # Define the codec and create VideoWriter object
-if gravar:
+if GRAVAR:
     fourcc = cv.VideoWriter_fourcc(*'MJPG')
     out_e = cv.VideoWriter('./video/Esquerda/video'+currentTime+'.avi', fourcc, 24.0, (1280, 720))
     out_d = cv.VideoWriter('./video/Direita/video'+currentTime+'.avi', fourcc, 24.0, (1280, 720))
@@ -46,7 +52,7 @@ while True:
         break
     
     # write the flipped frame
-    if gravar:
+    if GRAVAR:
         out_e.write(frame_e)
         out_d.write(frame_d)
 
@@ -55,7 +61,7 @@ while True:
     cv.imshow('Camera Direita', frame_d)
     
     t2 = time.time()
-    if (t2-t1>=3) and foto:
+    if (t2-t1>=3) and FOTO:
         t1 = time.time()
         frame_name = 'frame' + str(i) + '.jpg'
         i += 1

@@ -31,36 +31,36 @@ def calibrate_exposure(path, ref_mean, img_mean):
 
     return new_img
 
-
-gravar = 0
-video = cv.VideoCapture("./video/video_d_noite2.avi")
-
-if gravar:
-    fourcc = cv.VideoWriter_fourcc(*'MJPG')
-    out = cv.VideoWriter('./video_hls.avi', fourcc, 24.0, (1280, 720))
-
-ref_mean = [70.]
-
-while 1:
-    ret, frame = video.read()
-    if not ret:
-        break
-
-    img_mean = mean_exposure(frame)
-    #print("img_mean: ", img_mean)
-
-    new_img = calibrate_exposure(frame, ref_mean, img_mean)
-    new_mean = mean_exposure(new_img)
-    #print("new_mean: ", new_mean)
+if __name__=="__main__":
+    gravar = 0
+    video = cv.VideoCapture("./video/video_d_noite2.avi")
 
     if gravar:
-        out.write(new_img)
+        fourcc = cv.VideoWriter_fourcc(*'MJPG')
+        out = cv.VideoWriter('./video_hls.avi', fourcc, 24.0, (1280, 720))
 
-    cv.imshow("frame", new_img)
+    ref_mean = [70.]
 
-    if cv.waitKey(1) == ord("q"):
-        break
+    while 1:
+        ret, frame = video.read()
+        if not ret:
+            break
 
-if gravar:
-    out.release()
-cv.destroyAllWindows()
+        img_mean = mean_exposure(frame)
+        #print("img_mean: ", img_mean)
+
+        new_img = calibrate_exposure(frame, ref_mean, img_mean)
+        new_mean = mean_exposure(new_img)
+        #print("new_mean: ", new_mean)
+
+        if gravar:
+            out.write(new_img)
+
+        cv.imshow("frame", new_img)
+
+        if cv.waitKey(1) == ord("q"):
+            break
+
+    if gravar:
+        out.release()
+    cv.destroyAllWindows()
