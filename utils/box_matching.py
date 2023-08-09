@@ -36,22 +36,7 @@ def match_box(boxes1, boxes2):
             pairs.append((i1,i2))
         else:
             pairs.append((i2,i1))
-        # print(f"box{pairs[-1][0]} of boxes1 is the same of box{pairs[-1][1]} of boxes2")
 
-        # if i1==1 and True:
-        #     print(boxes1)
-        #     print(boxes1.shape)
-        #     print(boxes2)
-        #     print(boxes2.shape)
-        #     print('boxes1' if flag else 'boxes2')
-        #     print('b')
-        #     print(b)
-        #     print('dif')
-        #     print(dif)
-        #     print('sum_abs')
-        #     print(sum_abs)
-        #     print(f"box{pairs[i1][0]} of boxes1 is the same of box{pairs[i1][1]} of boxes2")
-    
     return pairs
 
 
