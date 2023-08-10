@@ -47,9 +47,9 @@ def display(frame_e, frame_d):
     cv.imshow('concat', im)
 
 def save(original_e, original_d, rectified_e, rectified_d, annotated_e, annotated_d):
-    cv.imwrite("./imagens para cabral/original_e.png", original_e)
-    cv.imwrite("./imagens para cabral/original_d.png", original_d)
-    cv.imwrite("./imagens para cabral/retificada_e.png", rectified_e)
-    cv.imwrite("./imagens para cabral/retificada_d.png", rectified_d)
-    cv.imwrite("./imagens para cabral/anotada_e.png", annotated_e)
-    cv.imwrite("./imagens para cabral/anotada_d.png", annotated_d)
+    cv.imwrite("./imagens para tcc/original_e.png", original_e)
+    cv.imwrite("./imagens para tcc/original_d.png", original_d)
+    cv.imwrite("./imagens para tcc/retificada_e.png", rectified_e)
+    cv.imwrite("./imagens para tcc/retificada_d.png", rectified_d)
+    cv.imwrite("./imagens para tcc/anotada_e.png", annotated_e)
+    cv.imwrite("./imagens para tcc/anotada_d.png", annotated_d)

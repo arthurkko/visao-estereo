@@ -9,7 +9,7 @@ from utils.world_to_camera import calculate_dist, calculate_disp
 from utils.annotate_image import annotate_position, annotate_dist, annotate_disp, display, save
 
 # GRAVAR=0 para parar de gravar
-GRAVAR = 0
+GRAVAR = 1
 
 # Load the YOLOv8 model
 model = YOLO('yolov8n.pt')
@@ -34,7 +34,12 @@ cap_d.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 
 if GRAVAR:
     fourcc = cv.VideoWriter_fourcc(*'MJPG')
-    out = cv.VideoWriter('./note_416_41fps.avi', fourcc, 24.0, (320, 320))
+    annotated_e = cv.VideoWriter('./videos para tcc/annotated_e.avi', fourcc, 18.0, (1104, 499))
+    annotated_d = cv.VideoWriter('./videos para tcc/annotated_d.avi', fourcc, 18.0, (1104, 499))
+    original_e = cv.VideoWriter('./videos para tcc/original_e.avi', fourcc, 18.0, (1280, 720))
+    original_d = cv.VideoWriter('./videos para tcc/original_d.avi', fourcc, 18.0, (1280, 720))
+    rectified_e = cv.VideoWriter('./videos para tcc/rectified_e.avi', fourcc, 18.0, (1104, 499))
+    rectified_d = cv.VideoWriter('./videos para tcc/rectified_d.avi', fourcc, 18.0, (1104, 499))
     
 params = CameraParams()
 
@@ -76,7 +81,8 @@ while cap_e.isOpened():
         # Anota os resultados nos frames
         annotated_frame_e = results_e[0].plot(labels=False)
         annotated_frame_d = results_d[0].plot(labels=False)
-        
+    
+
         for p in pairs:
             # Calcula a distância dos objetos entre as cameras
             dist = calculate_dist(res_e.xywh[p[0]], res_d.xywh[p[1]], params)
@@ -99,8 +105,12 @@ while cap_e.isOpened():
         display(annotated_frame_e, annotated_frame_d)
         
         if GRAVAR:
-            out.write(annotated_frame_e)
-            out.write(annotated_frame_d)
+            annotated_e.write(annotated_frame_e)
+            annotated_d.write(annotated_frame_d)
+            original_e.write(frame_e)
+            original_d.write(frame_d)
+            rectified_e.write(r_e)
+            rectified_d.write(r_d)
         
         # Break the loop if 'q' is pressed
         if cv.waitKey(1) & 0xFF == ord("q"):
@@ -116,5 +126,13 @@ while cap_e.isOpened():
 # Release the video capture object and close the display window
 cap_e.release()
 cap_d.release()
+
+if GRAVAR:
+    annotated_e.release()
+    annotated_d.release()
+    original_e.release()
+    original_d.release()
+    rectified_e.release()
+    rectified_d.release()
 
 cv.destroyAllWindows()
