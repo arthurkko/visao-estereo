@@ -18,7 +18,7 @@ We'll run Yolov8, and it requires python3.8.
 Jetson Jetpack (Jetson Nano OS from Nvidia) comes with pre-installed python2.7 and python3.6. Therefore, the plan is to create an python virtual environment to install python3.8.
 
 ### Increase swap
-Follow the steps in this ![tutorial](https://youtu.be/uvU8AXY1170?t=650)
+Follow the steps in this [tutorial](https://youtu.be/uvU8AXY1170?t=650)
 
 
 ### Set up environment
