@@ -50,33 +50,20 @@ Update sudo
 sudo apt-get update
 ```
 
-Install virtualenv
+Install python3.8
 ```bash
-sudo apt-get install virtualenv
-```
-Confirm that venv is installed properly
-```bash
-virtualenv --version
+sudo apt install -y python3.8 python3.8-venv python3.8-dev python3-pip \
+libopenmpi-dev libomp-dev libopenblas-dev libblas-dev libeigen3-dev libcublas-dev
 ```
 
 Create env
 ```bash
-python3 -m venv my_env
-```
-
-Install python3.8
-```bash
-sudo apt-get install python3.8
-```
-
-Add python3.8 to env
-```bash
-virtualenv -p python3.8 my_env
+python3.8 -m venv venv # Rename your virtual environment if you want
 ```
 
 To activate the env
 ```bash
-source my_env/bin/activate
+source venv/bin/activate
 ```
 
 Upgrade pip
@@ -104,9 +91,6 @@ pip install ultralytics
 ```
 Install pytorch
 Follow the steps
-```bash
-sudo apt install -y python3.8 python3.8-venv python3.8-dev python3-pip \
-libopenmpi-dev libomp-dev libopenblas-dev libblas-dev libeigen3-dev libcublas-dev```
 
 ```bash
 pip install -U pip wheel gdown```
