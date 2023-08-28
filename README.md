@@ -15,57 +15,106 @@ For future consults, I'll give an step-by-step on setting up the Jetson Nano, as
 
 We'll run Yolov8, and it requires python3.8.
 
-Jetson Jetpack (Jetson Nano OS from Nvidia) comes with pre-installed python2.7 and python3.6. Therefore, the plan is to create an python virtual environment to install python3.8.
+Jetpack SDK (Jetson OS from Nvidia) comes with pre-installed python2.7 and python3.6. Therefore, the plan is to create an python virtual environment to install python3.8.
 
 ### Increase swap
 Follow the steps in this [tutorial](https://youtu.be/uvU8AXY1170?t=650)
 
+### Enable nvcc
+Digite no terminal
+```bash
+nvcc --version
+```
+
+Caso resulte em `bash: nvcc: command not found`, é necessario adicionar o nvcc ao `PATH`.
+
+Para isso digite no terminal
+```bash
+vi /home/$USER/.bashrc
+```
+
+Vá para o final do arquivo e insira as seguintes linhas
+```bash
+export PATH="/usr/local/cuda-10.2/bin:$PATH"
+```
+```bash
+export LD_LIBRARY_PATH="/usr/local/cuda-10.2/LIB64:$LD_LIBRARY_PATH"
+```
+
+Feche o terminal e abra novamente. Insira `nvcc --version` e a versão do cuda deve aparecer.
 
 ### Set up environment
 
+Update sudo 
+```bash
+sudo apt-get update
+```
+
+Install virtualenv
 ```bash
 sudo apt-get install virtualenv
 ```
-confirm that venv is installed properly
+Confirm that venv is installed properly
 ```bash
 virtualenv --version
 ```
 
-create env
+Create env
 ```bash
 python3 -m venv my_env
 ```
 
-install python3.8
+Install python3.8
 ```bash
 sudo apt-get install python3.8
 ```
 
-add python3.8 to env
+Add python3.8 to env
 ```bash
 virtualenv -p python3.8 my_env
 ```
 
-to activate the env
+To activate the env
 ```bash
 source my_env/bin/activate
 ```
 
+Upgrade pip
+```bash
+pip install --upgrade pip
+```
+
 ### Dependencies
-install opencv
+Install opencv
 ```bash
 pip install opencv-python
 ```
 
-install numpy
+Install numpy
 ```bash
 pip install numpy
 ```
 
-install yolov8
+Install yolov8
 ```bash
 sudo apt-get install libpython3.8-dev
 ```
 ```bash
 pip install ultralytics
+```
+Install pytorch
+Follow the steps
+```bash
+sudo apt install -y python3.8 python3.8-venv python3.8-dev python3-pip \
+libopenmpi-dev libomp-dev libopenblas-dev libblas-dev libeigen3-dev libcublas-dev```
+
+```bash
+pip install -U pip wheel gdown```
+
+```bash
+# pytorch 1.11.0
+gdown https://drive.google.com/uc?id=1hs9HM0XJ2LPFghcn7ZMOs5qu5HexPXwM
+# torchvision 0.12.0
+gdown https://drive.google.com/uc?id=1m0d8ruUY8RvCP9eVjZw4Nc8LAwM8yuGV
+pip install torch-*.whl torchvision-*.whl
 ```
