@@ -9,7 +9,7 @@ Here you'll find the codes, python virtual environment, and the chessboard used 
 
 The goal was to run all this in the edge, in this case, a Jetson Nano.
 
-## Set Up
+# Set Up
 
 For future consults, I'll give an step-by-step on setting up the Jetson Nano, as it's always turned bad when I had to do it.
 
@@ -17,33 +17,37 @@ We'll run Yolov8, and it requires python3.8.
 
 Jetpack SDK (Jetson OS from Nvidia) comes with pre-installed python2.7 and python3.6. Therefore, the plan is to create an python virtual environment to install python3.8.
 
-### Increase swap
+## Install Jetpack
+To install the Jetpack into the Jetson Nano, follow the steps in this [link](https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#write).
+
+Choose your OS and then boot the Jetson.
+
+## Increase swap
 Follow the steps in this [tutorial](https://youtu.be/uvU8AXY1170?t=650)
 
-### Enable nvcc
-Digite no terminal
+## Enable nvcc
+Write on terminal
 ```bash
 nvcc --version
 ```
 
-Caso resulte em `bash: nvcc: command not found`, é necessario adicionar o nvcc ao `PATH`.
+If it result in `bash: nvcc: command not found`, it'll be necessary to add `nvcc` to the `PATH`.
 
-Para isso digite no terminal
+Write in terminal
 ```bash
 vi /home/$USER/.bashrc
 ```
 
-Vá para o final do arquivo e insira as seguintes linhas
+Go to the end of the final and add
 ```bash
 export PATH="/usr/local/cuda-10.2/bin:$PATH"
-```
-```bash
+
 export LD_LIBRARY_PATH="/usr/local/cuda-10.2/LIB64:$LD_LIBRARY_PATH"
 ```
 
-Feche o terminal e abra novamente. Insira `nvcc --version` e a versão do cuda deve aparecer.
+Close and open the terminal again. Write `nvcc --version` and the Cuda version should be displayed.
 
-### Set up environment
+## Set up environment
 
 Update sudo 
 ```bash
@@ -71,29 +75,30 @@ Upgrade pip
 pip install --upgrade pip
 ```
 
-### Dependencies
-Install opencv
+## Dependencies
+### Install opencv
 ```bash
 pip install opencv-python
 ```
 
-Install numpy
+### Install numpy
 ```bash
 pip install numpy
 ```
 
-Install yolov8
+### Install yolov8
 ```bash
 sudo apt-get install libpython3.8-dev
 ```
 ```bash
 pip install ultralytics
 ```
-Install pytorch
+### Install pytorch
 Follow the steps
 
 ```bash
-pip install -U pip wheel gdown```
+pip install -U pip wheel gdown
+```
 
 ```bash
 # pytorch 1.11.0
