@@ -1,22 +1,24 @@
-import numpy as np
+# import numpy as np
+import cupy as cp
 
 def parse(boxes):
-    detect = np.array([[0,0,0,0,0]])
-
+    
+    detect = cp.array([[0,0,0,0,0]])
+    
     for i in range(len(boxes)):
         box = boxes[i]
-
+        
         area = box[2]*box[3]
         cx = box[0]
         cy = box[1]
         h = box[3]
         w = box[2]
 
-        d = np.array([[area, cx, cy, h, w]])
-        detect = np.append(detect, d, axis=0)
+        d = cp.array([[area, cx, cy, h, w]])
+        detect = cp.append(detect, d, axis=0)
     
-    detect = np.delete(detect, 0, axis=0)
-
+    detect = detect[1:]
+   
     return detect
 
 def match_box(boxes1, boxes2):
@@ -30,8 +32,8 @@ def match_box(boxes1, boxes2):
 
     for i1, b in enumerate(boxes1 if flag else boxes2):
         dif = (boxes1 if not flag else boxes2) - b
-        sum_abs = np.sum(np.abs(dif), axis=1)
-        i2 = np.argmin(sum_abs)
+        sum_abs = cp.sum(cp.abs(dif), axis=1)
+        i2 = cp.argmin(sum_abs)
         if flag:
             pairs.append((i1,i2))
         else:

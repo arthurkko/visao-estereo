@@ -94,7 +94,10 @@ sudo apt-get install libpython3.8-dev
 pip install ultralytics
 ```
 ### Install pytorch
-Follow the steps
+
+We cannot install pytorch defalut packege on PiPy because it hasn't CUDA compatibility.
+
+Thus, follow the steps:
 
 ```bash
 pip install -U pip wheel gdown

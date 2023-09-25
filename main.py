@@ -68,8 +68,8 @@ while cap_e.isOpened():
         results_d = model(r_d, imgsz=320, conf=0.35, verbose=False)
 
         # Retorna os resultados em formato numpy
-        res_e = results_e[0].boxes.cpu().numpy()
-        res_d = results_d[0].boxes.cpu().numpy()
+        # res_e = results_e[0].boxes.cpu().numpy()
+        # res_d = results_d[0].boxes.cpu().numpy()
 
         # (x_centro, y_centro, largura, altura) de cada objeto
         match_e = parse(res_e.xywhn)
