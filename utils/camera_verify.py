@@ -4,7 +4,7 @@ Código básico para verificar a posição da câmera direita e esquerda
 
 import cv2 as cv
 
-cap = cv.VideoCapture(4)
+cap = cv.VideoCapture(2)
 cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
 
