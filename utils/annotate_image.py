@@ -15,17 +15,16 @@ def annotate_position(frame_e, frame_d, xywh_e, xywh_d, xyxy_e, xyxy_d):
                 (int(xyxy_d[2]-60), int(xyxy_d[1]-10)),
                 cv.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
     
-def annotate_dist(frame_e, xyxy_e, dist):
-
+def annotate_dist(frame_e, xyxy_e, dist, color=(0,0,255)):
     cv.putText(frame_e, f'x:{str(dist[0])}',
                 (int(xyxy_e[0]+5), int(xyxy_e[3]-35)),
-                cv.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+                cv.FONT_HERSHEY_PLAIN, 1, color, 2)
     cv.putText(frame_e, f'y:{str(dist[1])}',
                 (int(xyxy_e[0]+5), int(xyxy_e[3]-20)),
-                cv.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+                cv.FONT_HERSHEY_PLAIN, 1, color, 2)
     cv.putText(frame_e, f'z:{str(dist[2])}',
                 (int(xyxy_e[0]+5), int(xyxy_e[3]-5)),
-                cv.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+                cv.FONT_HERSHEY_PLAIN, 1, color, 2)
     
 def annotate_disp(frame_d, xyxy_d, disp):
     cv.putText(frame_d, f'disp:{disp}',
