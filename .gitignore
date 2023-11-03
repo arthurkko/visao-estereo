@@ -8,3 +8,4 @@ teste*
 yolov7/
 *.pt
 *tcc*
+output.json
