@@ -7,5 +7,6 @@ blk
 teste*
 yolov7/
 *.pt
-*tcc*
+tcc/
+medias/
 output.json

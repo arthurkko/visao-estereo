@@ -67,16 +67,19 @@ def annotate_disp(frame_d, xyxy_d, disp):
                 cv.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
     
 def display(frame_e, frame_d):
+
+    # Create a concateneted image of left and right frames
     s = frame_e.shape
 
     crop_e = frame_e[150:s[0], :, :]
     crop_d = frame_d[150:s[0], :, :]
   
-
     sc = crop_e.shape
     im = np.zeros((sc[0]*2, sc[1], sc[2]),np.uint8)
     im[:sc[0],:,:] = crop_e
     im[sc[0]:,:,:] = crop_d
+
+    # Show frames
     # cv.imshow("Original e", frame_e)
     # cv.imshow("Original d", frame_d)
     # cv.imshow("YOLOv8 e", frame_e)

@@ -18,7 +18,7 @@ classes = [0, 1, 2, 3, 5, 7, 9, 11, 12, 13, 15, 16, 24, 25, 26, 28, 32]
 
 # Open the video file
 # cap_e = cv.VideoCapture(4)
-cap_e = cv.VideoCapture('/home/smir/Desktop/Visao Estereo/video/Esquerda/video05_15_18_29.avi')
+cap_e = cv.VideoCapture('/home/smir/Desktop/Visao Estereo/medias/video/Esquerda/video05_15_18_29.avi')
 if not cap_e.isOpened():
     print("Cannot open camera")
     exit()
@@ -26,7 +26,7 @@ cap_e.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
 cap_e.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 
 # cap_d= cv.VideoCapture(2) 
-cap_d= cv.VideoCapture('/home/smir/Desktop/Visao Estereo/video/Direita/video05_15_18_29.avi') 
+cap_d= cv.VideoCapture('/home/smir/Desktop/Visao Estereo/medias/video/Direita/video05_15_18_29.avi') 
 if not cap_d.isOpened():
     print("Cannot open camera")
     exit()
@@ -109,11 +109,13 @@ while cap_e.isOpened():
                 disp, dist
                 )
             
+            # List of objects class and distances dictionary
             obj = {}
             obj_class = model.names[int(res_e[pair_e].cls[0])]
             obj[obj_class] = {'x': dist[0], 'y': dist[1], 'z': dist[2]}
             objects.append(obj)
         
+        # Write object class and distance on file
         with open("output.json", "a") as file:
             json.dump(objects, file)
             file.write("\n")
@@ -130,8 +132,7 @@ while cap_e.isOpened():
             # original_d.write(frame_d)
             # rectified_e.write(r_e)
             # rectified_d.write(r_d)
-                
-        
+
         
         # Break the loop if 'q' is pressed
         if cv.waitKey(1) & 0xFF == ord("q"):
@@ -157,5 +158,6 @@ if GRAVAR:
 
 cv.destroyAllWindows()
 
+# Erase file content
 with open("output.json", "w") as file:
             file.write("")
