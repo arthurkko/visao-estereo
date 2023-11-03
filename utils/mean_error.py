@@ -1,3 +1,10 @@
+"""
+Este código será utilizado para calcular o erro do sistema estéreo.
+
+Para isso, sabendo a distância que está das câmeras, uma pessoa pessoa deve ficar de frente 
+ao sistema, anotar o resultado e calcular o erro.
+"""
+
 import cv2 as cv
 from ultralytics import YOLO
 import numpy as np
@@ -37,13 +44,15 @@ cap_d.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 
 if GRAVAR:
     fourcc = cv.VideoWriter_fourcc(*'MJPG')
-    annotated_e = cv.VideoWriter('./videos para tcc/annotated_e.avi', fourcc, 10, (1104, 499))
-    annotated_d = cv.VideoWriter('./videos para tcc/annotated_d.avi', fourcc, 10, (1104, 499))
-    
+    annotated_e = cv.VideoWriter('/home/smir/Desktop/Visao Estereo/utils/mean_error/q.avi', fourcc, 5, (1107, 500))
+    original_e = cv.VideoWriter('/home/smir/Desktop/Visao Estereo/utils/mean_error/teste_e.avi', fourcc, 5, (1280, 720))
+    original_d = cv.VideoWriter('/home/smir/Desktop/Visao Estereo/utils/mean_error/teste_d.avi', fourcc, 5, (1280, 720)) 
+
 params = CameraParams()
 
 color = (0,0,255)
-mean_dist = np.zeros((50, 3))
+N_MEAN = 100
+mean_dist = np.zeros((N_MEAN, 3))
 n = 0
 
 # Loop through the video frames
@@ -61,18 +70,20 @@ while cap_e.isOpened():
         r_d = crop_frame(r_d, params.roi1, params.roi2)
 
         # Detecção de objetos
-        results_e = model.track(r_e, imgsz=320, conf=0.35, verbose=False, persist=True)
-        results_d = model.track(r_d, imgsz=320, conf=0.35, verbose=False, persist=True)
-        results_e[0] = results_e[0][results_e[0].boxes.cls == 0]
-        results_d[0] = results_d[0][results_d[0].boxes.cls == 0]
-  
+        results_e = model.track(r_e, imgsz=320, conf=0.35, verbose=False, persist=True, show_labels=False)
+        results_d = model.track(r_d, imgsz=320, conf=0.35, verbose=False, persist=True, show_labels=False) 
+        # results_e[0] = results_e[0][results_e[0].boxes.cls == 0]
+        # results_d[0] = results_d[0][results_d[0].boxes.cls == 0]
+        
         if results_e[0].boxes.id is not None:
+            # Retorna os resultados em formato numpy
             res_e = results_e[0].boxes.cpu().numpy()
             res_d = results_d[0].boxes.cpu().numpy()
 
-        # Retorna os resultados em formato numpy
-        res_e = results_e[0].boxes.cpu().numpy()
-        res_d = results_d[0].boxes.cpu().numpy()
+            if len(results_e[0].boxes.id)!=0:
+                flag = True # Captou pessoa
+            else:
+                flag = False # Não capturou uma pessoa
      
         # (x_centro, y_centro, largura, altura) de cada objeto normalizado
         xywhn_e = res_e.xywhn
@@ -94,37 +105,73 @@ while cap_e.isOpened():
         pairs = match_box(match_e, match_d)
 
         # Anota os resultados nos frames
-        annotated_frame_e = results_e[0].plot()
-        annotated_frame_d = results_d[0].plot()
-    
-        for p in pairs:
-            # Calcula a distância dos objetos entre as cameras
-            dist = calculate_dist(xywh_e[p[0]], xywh_d[p[1]], params)
-            if n%50==0:
-                n = 0
-                color = (0,255,0)
-            mean_dist[n] = dist
-            n += 1
+        annotated_frame_e = results_e[0].plot(conf=False)#labels=False)
+        annotated_frame_d = results_d[0].plot(conf=False)#labels=False)
 
-            # Calcula a disparidade dos objetos entre as cameras
-            disp = calculate_disp(xywh_e[p[0]], xywh_d[p[1]], params)
+        # if flag and len(pairs)>0:
+        #     p = pairs[0]
+        #     # Calcula a distância dos objetos entre as cameras
+        #     dist = calculate_dist(xywh_e[p[0]], xywh_d[p[1]], params)
             
-            # write the x and y position of objects in pixel
-            annotate_position(
-                annotated_frame_e, annotated_frame_d,
-                xywh_e[p[0]], xywh_d[p[1]],
-                xyxy_e[p[0]], xyxy_d[p[1]]
-                )
+        #     if n!=0 and n%N_MEAN==0:
+        #         n = 0
+        #         color = (0,255,0)
+
+        #     mean_dist[n] = dist
+        #     n += 1
+          
+        #     # Calcula a disparidade dos objetos entre as cameras
+        #     disp = calculate_disp(xywh_e[p[0]], xywh_d[p[1]], params)
             
-            # write the xyz position of object from the right camera
-            annotate_dist(annotated_frame_e, xyxy_e[p[0]], mean_dist.mean(0), color)
+        #     # write the xyz position of object from the right camera
+        #     annotate_dist(annotateds)>0:
+        #     p = pairs[0]
+        #     # Calcula a distância dos objetos entre as cameras
+        #     dist = calculate_dist(xywh_e[p[0]], xywh_d[p[1]], params)
             
-            # write the disparity of objects between cameras
-            annotate_disp(annotated_frame_d, xyxy_d[p[1]], disp)
-        
+        #     if n!=0 and n%N_MEAN==0:
+        #         n = 0
+        #         color = (0,255,0)
+
+        #     mean_dist[n] = dist
+        #     n += 1
+          
+        #     # Calcula a disparidade dos objetos entre as cameras
+        #     disp = calculate_disp(xywh_e[p[0]], xywh_d[p[1]], params)
+            
+        #     # write the xyz position of object from the right camera
+        #     annotate_dist(annotated_frame_e, xyxy_e[p[0]], mean_dist.mean(0), color)
+            
+        #     annotate_position(
+        #         annotated_frame_e, annotated_frame_d,
+        #         xywh_e[p[0]], xywh_d[p[1]],
+        #         xyxy_e[p[0]], xyxy_d[p[1]]
+        #         )
+        # else:
+        #     color = (0,0,255)
+        #     mean_dist = np.zeros((N_MEAN, 3))
+        #     n = 0_frame_e, xyxy_e[p[0]], mean_dist.mean(0), color)
+            
+        #     annotate_position(
+        #         annotated_frame_e, annotated_frame_d,
+        #         xywh_e[p[0]], xywh_d[p[1]],
+        #         xyxy_e[p[0]], xyxy_d[p[1]]
+        #         )
+        # else:
+        #     color = (0,0,255)
+        #     mean_dist = np.zeros((N_MEAN, 3))
+        #     n = 0
+        # print("mean_dist: ", mean_dist)
+        # print("n: ", n)
+        # print("flag: ", flag)
+        # print("n%N_MEAN: ", n!=0 and n%N_MEAN==0)
+        # print("color: ", color)
+        # print()
+
         if GRAVAR:
+            original_e.write(frame_e)
+            original_d.write(frame_d)
             annotated_e.write(annotated_frame_e)
-            annotated_d.write(annotated_frame_d)
                 
         # Display the annotated frame
         display(annotated_frame_e, annotated_frame_d)
@@ -132,6 +179,7 @@ while cap_e.isOpened():
         
         # Break the loop if 'q' is pressed
         if cv.waitKey(1) & 0xFF == ord("q"):
+            save(frame_e, frame_d, r_e, r_d, annotated_frame_e, annotated_frame_d)
             break
 
     else:
@@ -143,7 +191,7 @@ cap_e.release()
 cap_d.release()
 
 if GRAVAR:
-    annotated_e.release()
-    annotated_d.release()
+    original_e.release()
+    original_d.release()
 
 cv.destroyAllWindows()
